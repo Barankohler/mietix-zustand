@@ -187,7 +187,7 @@ function flotteZeichnen(){
     +'<div class="zahl"><b style="color:var(--gelb)">'+AUTOS.filter(n=>ampel(n)==="gelb").length
        +'</b><i>bald ran</i></div>'
     +'<div class="zahl"><b style="color:var(--gruen)">'+AUTOS.filter(n=>ampel(n)==="gruen").length
-       +'</b><i>alles in Ordnung</i></div>';
+       +'</b><i>in Ordnung</i></div>';
   $("flotte").innerHTML=AUTOS.map(n=>{
     const o=offeneVon(n).sort((a,b)=>
       ({kritisch:0,stoert:1,kosmetisch:2}[a.dringend]-{kritisch:0,stoert:1,kosmetisch:2}[b.dringend]));
