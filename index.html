@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="de"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mietix Fahrzeugzustand</title>
+<style>
+:root{--rot:#C4161C;--dunkel:#2E2E30;--rand:#E2E2E4;--grau:#6F6F72;--bg:#F2F2F4;
+  --gruen:#1B8A4B;--gelb:#B07400}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  background:var(--bg);color:var(--dunkel);padding-bottom:40px;-webkit-text-size-adjust:100%}
+header{background:var(--dunkel);color:#fff;border-bottom:3px solid var(--rot);
+  padding:calc(10px + env(safe-area-inset-top)) 18px 10px}
+header h1{font-size:15px;letter-spacing:1.2px;font-weight:800}
+header h1 span{color:var(--rot)}
+main{max-width:640px;margin:0 auto;padding:18px 18px 0}
+.feldname{font-size:11px;text-transform:uppercase;letter-spacing:.9px;color:var(--grau);
+  margin:0 0 8px 3px;font-weight:800}
+.block{margin-bottom:20px}
+.karte{background:#fff;border-radius:20px;padding:17px;
+  box-shadow:0 1px 2px rgba(0,0,0,.05),0 6px 16px rgba(0,0,0,.045)}
+label{display:block;font-size:12px;font-weight:700;color:var(--grau);margin:12px 0 5px}
+label:first-child{margin-top:0}
+input,select,textarea{width:100%;background:#fff;border:1px solid var(--rand);border-radius:16px;
+  padding:15px 16px;font:800 18px inherit;color:var(--dunkel);min-height:56px}
+textarea{font-weight:400;font-size:16px;min-height:70px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--dunkel);outline-offset:-2px}
+button{width:100%;padding:17px;font:800 17px inherit;border:0;border-radius:16px;
+  background:var(--rot);color:#fff;margin-top:12px;min-height:56px}
+button.hell{background:#fff;color:var(--dunkel);border:1px solid var(--rand)}
+.stufen{display:grid;gap:8px;margin-top:6px}
+.stufen.zwei{grid-template-columns:repeat(2,1fr)}
+.stufen.drei{grid-template-columns:repeat(3,1fr)}
+.stufe{background:#fff;border:1px solid var(--rand);border-radius:14px;padding:13px 4px;
+  text-align:center;font-weight:800;font-size:14px;cursor:pointer;line-height:1.2}
+.stufe.an{background:var(--dunkel);color:#fff;border-color:var(--dunkel)}
+.auto{background:#fff;border-radius:18px;padding:14px 16px;margin-bottom:10px;cursor:pointer;
+  box-shadow:0 1px 2px rgba(0,0,0,.05),0 6px 16px rgba(0,0,0,.045);
+  border-left:6px solid var(--gruen);display:flex;align-items:flex-start;gap:12px}
+.auto.gelb{border-left-color:var(--gelb)}
+.auto.rot{border-left-color:var(--rot)}
+.auto .mitte{flex:1;min-width:0}
+.auto .n{font-size:17px;font-weight:800;letter-spacing:-.2px;display:block}
+.auto .punkte{margin-top:5px;font-size:13.5px;line-height:1.5;color:#4A4A4E}
+.auto .punkte b{font-weight:800}
+.auto .punkte .kr{color:var(--rot);font-weight:800}
+.auto .ok{margin-top:4px;font-size:13.5px;color:var(--gruen);font-weight:700}
+.auto .mehr{margin-top:3px;font-size:12.5px;color:var(--grau);font-weight:700}
+.auto .pfeil{color:#B9B9C2;font-size:22px;font-weight:800;line-height:1}
+.mangel{background:#fff;border-radius:16px;padding:14px 15px;margin-bottom:9px;
+  box-shadow:0 1px 2px rgba(0,0,0,.05),0 6px 16px rgba(0,0,0,.045);
+  border-left:5px solid var(--gelb)}
+.mangel.kosmetisch{border-left-color:#B9B9C2}
+.mangel.kritisch{border-left-color:var(--rot)}
+.mangel.erledigt{opacity:.55;border-left-color:var(--gruen)}
+.mkopf{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.mteil{font-size:16px;font-weight:800}
+.mdat{font-size:12px;color:var(--grau);font-weight:700;flex:none}
+.mtext{font-size:14.5px;margin-top:4px;line-height:1.45}
+.mnotiz{font-size:13.5px;color:var(--grau);margin-top:4px;line-height:1.45}
+.mreihe{display:grid;grid-template-columns:repeat(3,1fr) auto;gap:7px;margin-top:11px}
+.minik{text-align:center;padding:11px 3px;border-radius:12px;font-size:12px;font-weight:800;
+  border:1px solid var(--rand);background:#fff;cursor:pointer;display:flex;
+  align-items:center;justify-content:center;min-height:44px;line-height:1.2}
+.minik.an{background:var(--dunkel);color:#fff;border-color:var(--dunkel)}
+.minik.weg{color:var(--rot);padding:11px 14px}
+.abschnitt{font-size:11px;text-transform:uppercase;letter-spacing:.9px;color:var(--grau);
+  font-weight:800;margin:16px 0 8px 3px}
+.abschnitt:first-child{margin-top:0}
+.zurueck{display:inline-block;font-size:14px;font-weight:800;color:var(--rot);
+  margin-bottom:12px;cursor:pointer}
+.leer{text-align:center;color:var(--grau);font-size:15px;font-weight:600;padding:24px 10px}
+.zahlen{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.zahl{background:#fff;border-radius:14px;padding:12px 4px;text-align:center;
+  box-shadow:0 1px 2px rgba(0,0,0,.05),0 6px 16px rgba(0,0,0,.045)}
+.zahl b{display:block;font-size:24px;font-weight:800;line-height:1.1}
+.zahl i{display:block;font-style:normal;font-size:10.5px;text-transform:uppercase;
+  letter-spacing:.6px;color:var(--grau);font-weight:800;margin-top:3px}
+footer{max-width:640px;margin:22px auto 0;padding:0 18px;font-size:12px;color:var(--grau);
+  line-height:1.55}
+</style></head><body>
+<header><h1>MIETIX <span>FAHRZEUGZUSTAND</span></h1></header>
+<main>
+
+<div id="uebersicht">
+  <div class="block">
+    <p class="feldname">Flotte</p>
+    <div class="zahlen" id="zahlen"></div>
+    <div id="flotte"></div>
+  </div>
+  <div class="block">
+    <p class="feldname">Neuer Eintrag</p>
+    <div class="karte">
+      <label>Fahrzeug</label>
+      <select id="auto"></select>
+      <label>Worum geht es?</label>
+      <div class="stufen zwei" id="art">
+        <div class="stufe an" data-a="arbeit">Muss gemacht werden</div>
+        <div class="stufe" data-a="schaden">Schaden</div>
+      </div>
+      <label id="teilname">Was ist fällig?</label>
+      <select id="teil"></select>
+      <label id="wasname">Genauer</label>
+      <input id="was" type="text" placeholder="z. B. fällig bei 85.000 km">
+      <label>Wie dringend?</label>
+      <div class="stufen drei" id="dringend">
+        <div class="stufe" data-w="kosmetisch">kann warten</div>
+        <div class="stufe an" data-w="stoert">bald</div>
+        <div class="stufe" data-w="kritisch">sofort</div>
+      </div>
+      <label>Notiz</label>
+      <textarea id="notiz" placeholder="z. B. Termin bei Scherer anfragen"></textarea>
+      <button id="speichern">Eintragen</button>
+    </div>
+  </div>
+  <div class="block">
+    <p class="feldname">Sichern und abgleichen</p>
+    <div class="karte">
+      <button id="ausgeben" class="hell">Alles sichern</button>
+      <button id="einlesen" class="hell">Sicherung einlesen</button>
+      <textarea id="sicherung" placeholder="Hier erscheint die Sicherung, oder hier einfügen zum Einlesen"
+        style="margin-top:12px;font-size:13px;min-height:88px"></textarea>
+    </div>
+  </div>
+</div>
+
+<div id="detail" style="display:none">
+  <div class="zurueck" id="zurueck">&#8249; Zurück zur Flotte</div>
+  <div class="block">
+    <p class="feldname" id="detailname">Fahrzeug</p>
+    <div id="mangelliste"></div>
+    <button id="werkstatt">Werkstattliste senden</button>
+  </div>
+</div>
+
+</main>
+<footer>
+  Die Einträge liegen auf diesem Handy. Für denselben Stand bei Ihrem Bruder
+  die Sicherung herüberschicken.
+</footer>
+<script>
+const $=id=>document.getElementById(id);
+let AUTOS=["Audi RS Q8"];
+let OFFEN=null;
+
+const TEILE={
+ arbeit:["Bremsen vorne","Bremsen hinten","Bremsen rundum","Bremsscheiben","Reifen vorne",
+  "Reifen hinten","Reifen rundum","Ölwechsel","Inspektion","HU und AU","Klimaservice",
+  "Batterie","Scheibenwischer","Zündkerzen","Luftfilter","Radwechsel","Spur einstellen",
+  "Felgen aufbereiten","Lack polieren","Steinschläge ausbessern","Innenreinigung",
+  "Aufbereitung","Sonstiges"],
+ schaden:["Stossstange vorne","Stossstange hinten","Kotflügel vorne links","Kotflügel vorne rechts",
+  "Kotflügel hinten links","Kotflügel hinten rechts","Tür vorne links","Tür vorne rechts",
+  "Tür hinten links","Tür hinten rechts","Motorhaube","Dach","Heckklappe","Schweller links",
+  "Schweller rechts","Frontscheibe","Heckscheibe","Seitenscheibe","Aussenspiegel links",
+  "Aussenspiegel rechts","Scheinwerfer links","Scheinwerfer rechts","Rückleuchte links",
+  "Rückleuchte rechts","Felge vorne links","Felge vorne rechts","Felge hinten links",
+  "Felge hinten rechts","Reifen vorne","Reifen hinten","Auspuff","Unterboden",
+  "Innenraum und Sitze","Lenkrad","Technik und Elektronik","Lack allgemein","Sonstiges"]};
+
+const STUFEN={
+ arbeit:{kosmetisch:"kann warten",stoert:"bald",kritisch:"sofort"},
+ schaden:{kosmetisch:"kosmetisch",stoert:"stört",kritisch:"kritisch"}};
+const STAENDE=[["offen","offen"],["arbeit","in Arbeit"],["erledigt","erledigt"]];
+
+function lesen(){ try{ return JSON.parse(localStorage.getItem("mietixZustand")||"[]"); }catch(e){ return []; } }
+function schreiben(a){ try{ localStorage.setItem("mietixZustand",JSON.stringify(a)); }catch(e){} }
+function heute(){ const d=new Date();
+  return String(d.getDate()).padStart(2,"0")+"."+String(d.getMonth()+1).padStart(2,"0")+"."+d.getFullYear(); }
+const art=m=>(m.art==="schaden"?"schaden":"arbeit");
+const stufe=m=>STUFEN[art(m)][m.dringend]||"bald";
+const offeneVon=n=>lesen().filter(m=>m.auto===n&&m.stand!=="erledigt");
+function ampel(n){
+  const o=offeneVon(n);
+  if(!o.length) return "gruen";
+  return o.some(m=>m.dringend==="kritisch") ? "rot" : "gelb";
+}
+function zeile(m){
+  if(art(m)==="schaden") return m.teil+(m.was?": "+m.was:" beschädigt");
+  return m.teil+(m.was?": "+m.was:" fällig");
+}
+
+function flotteZeichnen(){
+  $("zahlen").innerHTML=
+     '<div class="zahl"><b style="color:var(--rot)">'+AUTOS.filter(n=>ampel(n)==="rot").length
+       +'</b><i>sofort ran</i></div>'
+    +'<div class="zahl"><b style="color:var(--gelb)">'+AUTOS.filter(n=>ampel(n)==="gelb").length
+       +'</b><i>offene Punkte</i></div>'
+    +'<div class="zahl"><b style="color:var(--gruen)">'+AUTOS.filter(n=>ampel(n)==="gruen").length
+       +'</b><i>alles in Ordnung</i></div>';
+  $("flotte").innerHTML=AUTOS.map(n=>{
+    const o=offeneVon(n).sort((a,b)=>
+      ({kritisch:0,stoert:1,kosmetisch:2}[a.dringend]-{kritisch:0,stoert:1,kosmetisch:2}[b.dringend]));
+    const a=ampel(n);
+    let inhalt;
+    if(!o.length){ inhalt='<span class="ok">Alles in Ordnung</span>'; }
+    else{
+      inhalt='<div class="punkte">'+o.slice(0,3).map(m=>
+        (m.dringend==="kritisch"?'<span class="kr">':'<span>')+zeile(m)+'</span>').join("<br>")+'</div>';
+      if(o.length>3) inhalt+='<div class="mehr">und '+(o.length-3)+' weitere</div>';
+    }
+    return '<div class="auto '+a+'" data-n="'+n+'"><span class="mitte">'
+      +'<span class="n">'+n+'</span>'+inhalt+'</span><span class="pfeil">&#8250;</span></div>';
+  }).join("");
+  [...$("flotte").querySelectorAll(".auto")].forEach(e=>{
+    e.onclick=()=>{ OFFEN=e.dataset.n; detailZeichnen(); };
+  });
+}
+
+function detailZeichnen(){
+  $("uebersicht").style.display="none";
+  $("detail").style.display="block";
+  $("detailname").textContent=OFFEN;
+  const alle=lesen().filter(m=>m.auto===OFFEN);
+  const rang={kritisch:0,stoert:1,kosmetisch:2};
+  const bauen=l=>l.sort((a,b)=>rang[a.dringend]-rang[b.dringend]).map(m=>
+      '<div class="mangel '+(m.stand==="erledigt"?"erledigt":m.dringend)+'" data-id="'+m.id+'">'
+      +'<div class="mkopf"><span class="mteil">'+m.teil+'</span><span class="mdat">'+m.datum+'</span></div>'
+      +(m.was?'<div class="mtext">'+m.was+'</div>':'')
+      +'<div class="mnotiz">'+stufe(m)+(m.stand==="arbeit"?", in Arbeit":"")
+        +(m.notiz?"  |  "+m.notiz:"")+'</div>'
+      +'<div class="mreihe">'
+        +STAENDE.map(s=>'<div class="minik '+(m.stand===s[0]?"an":"")+'" data-s="'+s[0]+'">'+s[1]+'</div>').join("")
+        +'<div class="minik weg" data-weg="1">&#10005;</div>'
+      +'</div></div>').join("");
+  const arbeiten=alle.filter(m=>m.stand!=="erledigt"&&art(m)==="arbeit");
+  const schaeden=alle.filter(m=>m.stand!=="erledigt"&&art(m)==="schaden");
+  const fertig  =alle.filter(m=>m.stand==="erledigt");
+  let h="";
+  if(arbeiten.length) h+='<p class="abschnitt">Muss gemacht werden</p>'+bauen(arbeiten);
+  if(schaeden.length) h+='<p class="abschnitt">Schäden</p>'+bauen(schaeden);
+  if(fertig.length)   h+='<p class="abschnitt">Erledigt</p>'+bauen(fertig);
+  if(!h) h='<div class="leer">Für dieses Fahrzeug ist nichts eingetragen.</div>';
+  $("mangelliste").innerHTML=h;
+  [...$("mangelliste").querySelectorAll(".mangel")].forEach(e=>{
+    const id=e.dataset.id;
+    e.querySelectorAll(".minik[data-s]").forEach(k=>{
+      k.onclick=()=>{ const a=lesen(), t=a.find(x=>x.id===id);
+        if(t){ t.stand=k.dataset.s; schreiben(a); detailZeichnen(); } };
+    });
+    const weg=e.querySelector(".minik[data-weg]");
+    if(weg) weg.onclick=()=>{ if(!confirm("Diesen Eintrag löschen?"))return;
+      schreiben(lesen().filter(x=>x.id!==id)); detailZeichnen(); };
+  });
+  window.scrollTo(0,0);
+}
+
+$("zurueck").onclick=()=>{
+  OFFEN=null; $("detail").style.display="none"; $("uebersicht").style.display="block";
+  flotteZeichnen(); window.scrollTo(0,0);
+};
+
+$("werkstatt").onclick=()=>{
+  const o=offeneVon(OFFEN);
+  let t="*"+OFFEN+"*\n";
+  if(!o.length){ t+="\nKeine offenen Punkte."; }
+  else{
+    t+="Stand "+heute()+"\n";
+    const rang={kritisch:0,stoert:1,kosmetisch:2};
+    [["arbeit","*Muss gemacht werden*"],["schaden","*Schäden*"]].forEach(g=>{
+      const l=o.filter(m=>art(m)===g[0]).sort((a,b)=>rang[a.dringend]-rang[b.dringend]);
+      if(!l.length) return;
+      t+="\n"+g[1]+"\n\n";
+      l.forEach(m=>{
+        t+="- "+zeile(m)+"\n";
+        t+="  "+stufe(m)+(m.notiz?", "+m.notiz:"")+"\n";
+      });
+    });
+    t+="\nBitte um einen Termin und eine Kostenschätzung.";
+  }
+  window.open("https://wa.me/?text="+encodeURIComponent(t),"_blank");
+};
+
+function aktuelleArt(){ const e=$("art").querySelector(".stufe.an"); return e?e.dataset.a:"arbeit"; }
+
+function teileFuellen(){
+  const a=aktuelleArt();
+  $("teil").innerHTML=TEILE[a].map(t=>'<option>'+t+'</option>').join("");
+  $("teilname").textContent = a==="arbeit" ? "Was ist fällig?" : "Welches Bauteil?";
+  $("was").placeholder = a==="arbeit" ? "z. B. fällig bei 85.000 km" : "z. B. drei Steinschläge";
+  [...$("dringend").querySelectorAll(".stufe")].forEach(s=>{
+    s.textContent=STUFEN[a][s.dataset.w];
+  });
+}
+
+[...$("art").querySelectorAll(".stufe")].forEach(s=>{
+  s.onclick=()=>{ [...$("art").querySelectorAll(".stufe")].forEach(x=>x.classList.remove("an"));
+    s.classList.add("an"); teileFuellen(); };
+});
+[...$("dringend").querySelectorAll(".stufe")].forEach(s=>{
+  s.onclick=()=>{ [...$("dringend").querySelectorAll(".stufe")].forEach(x=>x.classList.remove("an"));
+    s.classList.add("an"); };
+});
+
+$("speichern").onclick=()=>{
+  if(!$("auto").value){ alert("Bitte ein Fahrzeug wählen."); return; }
+  if(!$("teil").value){ alert("Bitte einen Punkt wählen."); return; }
+  const d=$("dringend").querySelector(".stufe.an");
+  const a=lesen();
+  a.push({ id:String(Date.now())+Math.random().toString(36).slice(2,6),
+    auto:$("auto").value, art:aktuelleArt(), teil:$("teil").value, was:$("was").value.trim(),
+    dringend:d?d.dataset.w:"stoert", notiz:$("notiz").value.trim(),
+    datum:heute(), stand:"offen" });
+  schreiben(a);
+  $("was").value=""; $("notiz").value="";
+  flotteZeichnen();
+  $("speichern").textContent="Eingetragen";
+  setTimeout(()=>{$("speichern").textContent="Eintragen";},1400);
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+
+$("ausgeben").onclick=()=>{
+  $("sicherung").value=JSON.stringify(lesen());
+  $("ausgeben").textContent="Unten steht die Sicherung";
+  setTimeout(()=>{$("ausgeben").textContent="Alles sichern";},1800);
+};
+$("einlesen").onclick=()=>{
+  let neu=null;
+  try{ neu=JSON.parse($("sicherung").value); }catch(e){}
+  if(!Array.isArray(neu)){ alert("Da steht keine gültige Sicherung."); return; }
+  const a=lesen(), bekannt=new Set(a.map(x=>x.id));
+  let dazu=0;
+  neu.forEach(x=>{ if(x&&x.id&&!bekannt.has(x.id)){ a.push(x); dazu++; } });
+  schreiben(a); flotteZeichnen();
+  alert(dazu+(dazu===1?" Eintrag":" Einträge")+" dazugekommen.");
+};
+
+function autosFuellen(){
+  const vorher=$("auto").value;
+  $("auto").innerHTML=AUTOS.map(n=>'<option>'+n+'</option>').join("");
+  if(vorher && AUTOS.includes(vorher)) $("auto").value=vorher;
+}
+autosFuellen(); teileFuellen(); flotteZeichnen();
+try{
+  fetch("https://barankohler.github.io/mietix-preise/preise.json",{cache:"no-store"})
+    .then(r=>r.ok?r.json():null)
+    .then(p=>{ if(p&&p.cars&&p.cars.length){ AUTOS=p.cars.map(c=>c.anzeige||c.n);
+      autosFuellen(); flotteZeichnen(); } })
+    .catch(()=>{});
+}catch(e){}
+</script></body></html>
