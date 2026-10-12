@@ -185,7 +185,7 @@ function flotteZeichnen(){
      '<div class="zahl"><b style="color:var(--rot)">'+AUTOS.filter(n=>ampel(n)==="rot").length
        +'</b><i>sofort ran</i></div>'
     +'<div class="zahl"><b style="color:var(--gelb)">'+AUTOS.filter(n=>ampel(n)==="gelb").length
-       +'</b><i>offene Punkte</i></div>'
+       +'</b><i>bald ran</i></div>'
     +'<div class="zahl"><b style="color:var(--gruen)">'+AUTOS.filter(n=>ampel(n)==="gruen").length
        +'</b><i>alles in Ordnung</i></div>';
   $("flotte").innerHTML=AUTOS.map(n=>{
