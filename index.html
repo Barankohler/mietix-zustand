@@ -21,7 +21,10 @@ main{max-width:640px;margin:0 auto;padding:16px 18px 0}
 select,input{width:100%;background:#fff;border:1px solid var(--rand);border-radius:14px;
   padding:14px 15px;font:800 17px inherit;color:var(--dunkel);min-height:54px}
 select:focus,input:focus{outline:2px solid var(--dunkel);outline-offset:-2px}
-.eingabe select{margin-bottom:9px}
+.eingabe select{margin-bottom:8px}
+.eingabe .reihe{display:flex;gap:8px}
+.eingabe .reihe input{flex:1;min-width:0}
+.eingabe .reihe button{width:auto;flex:none;margin-top:0;padding:14px 20px}
 button{width:100%;padding:16px;font:800 17px inherit;border:0;border-radius:14px;
   background:var(--rot);color:#fff;margin-top:9px;min-height:54px}
 button.hell{background:#fff;color:var(--dunkel);border:1px solid var(--rand)}
@@ -65,9 +68,11 @@ footer{max-width:640px;margin:14px auto 0;padding:0 20px;font-size:12px;color:va
 <div class="block">
   <div class="karte eingabe">
     <select id="auto"></select>
-    <input id="was" type="text" placeholder="z. B. Bremsen fällig"
-      autocomplete="off" enterkeyhint="done">
-    <button id="speichern">Eintragen</button>
+    <div class="reihe">
+      <input id="was" type="text" placeholder="z. B. Bremsen fällig"
+        autocomplete="off" enterkeyhint="done">
+      <button id="speichern">Eintragen</button>
+    </div>
   </div>
 </div>
 
@@ -174,8 +179,8 @@ function eintragen(){
   $("was").value="";
   try{ localStorage.setItem("mietixZustandAuto",$("auto").value); }catch(e){}
   zeichnen();
-  $("speichern").textContent="Eingetragen";
-  setTimeout(()=>{$("speichern").textContent="Eintragen";},1200);
+  $("speichern").textContent="Steht";
+  setTimeout(()=>{$("speichern").textContent="Eintragen";},1100);
 }
 $("speichern").onclick=eintragen;
 $("was").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); eintragen(); }});
