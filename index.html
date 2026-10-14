@@ -4,168 +4,116 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Mietix Fahrzeugzustand</title>
 <style>
-:root{--rot:#C4161C;--dunkel:#2E2E30;--rand:#E2E2E4;--grau:#6F6F72;--bg:#F2F2F4;--gruen:#1B8A4B}
+:root{--rot:#C4161C;--dunkel:#2E2E30;--rand:#E2E2E4;--grau:#6F6F72;--bg:#F2F2F4}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-  background:var(--bg);color:var(--dunkel);padding-bottom:40px;-webkit-text-size-adjust:100%}
+  background:var(--bg);color:var(--dunkel);-webkit-text-size-adjust:100%}
 header{background:var(--dunkel);color:#fff;border-bottom:3px solid var(--rot);
   padding:calc(10px + env(safe-area-inset-top)) 18px 10px}
 header h1{font-size:15px;letter-spacing:1.2px;font-weight:800}
 header h1 span{color:var(--rot)}
-main{max-width:640px;margin:0 auto;padding:16px 18px 0}
-.feldname{font-size:11px;text-transform:uppercase;letter-spacing:.9px;color:var(--grau);
-  margin:0 0 8px 3px;font-weight:800}
-.block{margin-bottom:18px}
-.karte{background:#fff;border-radius:20px;padding:14px;
-  box-shadow:0 1px 2px rgba(0,0,0,.05),0 6px 16px rgba(0,0,0,.045)}
-select,input{width:100%;background:#fff;border:1px solid var(--rand);border-radius:14px;
-  padding:14px 15px;font:800 17px inherit;color:var(--dunkel);min-height:54px}
-select:focus,input:focus{outline:2px solid var(--dunkel);outline-offset:-2px}
-.eingabe select{margin-bottom:8px}
-.eingabe .reihe{display:flex;gap:8px}
-.eingabe .reihe input{flex:1;min-width:0}
-.eingabe .reihe button{width:auto;flex:none;margin-top:0;padding:14px 20px}
-button{width:100%;padding:16px;font:800 17px inherit;border:0;border-radius:14px;
-  background:var(--rot);color:#fff;margin-top:9px;min-height:54px}
-button.hell{background:#fff;color:var(--dunkel);border:1px solid var(--rand)}
+main{max-width:640px;margin:0 auto;padding:16px 16px 0}
 
-.gruppe{margin-bottom:14px}
-.gkopf{display:flex;align-items:baseline;gap:8px;margin:0 3px 7px}
-.gkopf b{font-size:17px;font-weight:800;letter-spacing:-.2px}
-.gkopf i{font-style:normal;font-size:13px;font-weight:800;color:var(--grau)}
-.liste{background:#fff;border-radius:18px;overflow:hidden;
+.zettel{background:#fff;border-radius:20px;padding:6px 18px 14px;
   box-shadow:0 1px 2px rgba(0,0,0,.05),0 6px 16px rgba(0,0,0,.045)}
-.zeile{display:flex;align-items:center;gap:12px;padding:13px 14px;border-top:1px solid #F0F0F2}
-.zeile:first-child{border-top:0}
-.haken{flex:none;width:26px;height:26px;border-radius:50%;border:2px solid #C9C9CE;
-  background:#fff;cursor:pointer;position:relative}
-.haken.an{background:var(--gruen);border-color:var(--gruen)}
-.haken.an::after{content:"";position:absolute;left:8px;top:3.5px;width:6px;height:12px;
-  border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(43deg)}
-.was{flex:1;font-size:16px;line-height:1.4;font-weight:600;word-break:break-word}
-.zeile.fertig .was{text-decoration:line-through;color:var(--grau);font-weight:500}
-.weg{flex:none;color:#C4C4CA;font-size:19px;font-weight:800;cursor:pointer;padding:4px 2px 4px 8px}
+.auto{font-size:17px;font-weight:800;letter-spacing:-.2px;padding:15px 0 2px;
+  border-top:1px solid #EDEDEF}
+.zettel .auto:first-child{border-top:0;padding-top:10px}
+.p{display:flex;gap:11px;align-items:flex-start;padding:8px 0;cursor:pointer}
+.p::before{content:"";flex:none;width:7px;height:7px;border-radius:50%;
+  background:var(--rot);margin-top:8px}
+.p span{font-size:16.5px;line-height:1.42;font-weight:600;word-break:break-word}
+.p.fertig::before{background:#CFCFD4}
+.p.fertig span{text-decoration:line-through;color:#A8A8AE;font-weight:500}
+.ok{font-size:14px;color:var(--grau);line-height:1.5;padding:15px 0 2px;
+  border-top:1px solid #EDEDEF;font-weight:600}
+.zettel .ok:first-child{border-top:0}
+.leer{text-align:center;color:var(--grau);font-size:16px;font-weight:600;padding:34px 10px}
 
-.frei{font-size:13.5px;color:var(--grau);line-height:1.55;padding:0 4px;margin-bottom:16px}
-.frei b{color:var(--gruen);font-weight:800}
-.leer{text-align:center;color:var(--grau);font-size:15px;font-weight:600;padding:22px 10px}
-details{margin-bottom:16px}
-summary{list-style:none;cursor:pointer;font-size:12px;text-transform:uppercase;
-  letter-spacing:.9px;color:var(--grau);font-weight:800;padding:7px 3px}
-summary::-webkit-details-marker{display:none}
-summary::after{content:" anzeigen";color:#A6A6AC}
-details[open] summary::after{content:" ausblenden"}
-details .karte{margin-top:6px}
-#sicherung{font-size:13px;font-weight:400;min-height:84px;padding:12px 14px;
-  border-radius:14px;border:1px solid var(--rand);width:100%;margin-top:10px;
-  font-family:inherit}
-footer{max-width:640px;margin:14px auto 0;padding:0 20px;font-size:12px;color:var(--grau);
-  line-height:1.55}
+.fuss{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;
+  padding:16px 10px 0;margin-bottom:96px}
+.fuss a{font-size:13px;font-weight:800;color:var(--grau);cursor:pointer;
+  text-decoration:none;border-bottom:1px solid #D4D4D8;padding-bottom:1px}
+#sicherbox{max-width:640px;margin:0 auto 96px;padding:0 16px;display:none}
+#sicherung{width:100%;min-height:92px;border:1px solid var(--rand);border-radius:14px;
+  padding:12px 14px;font:400 13px inherit;font-family:inherit;background:#fff}
+#sicherbox .knoepfe{display:flex;gap:9px;margin-top:9px}
+#sicherbox button{flex:1;padding:13px;border:1px solid var(--rand);border-radius:13px;
+  background:#fff;color:var(--dunkel);font:800 14px inherit;min-height:48px}
+
+.leiste{position:fixed;left:0;right:0;bottom:0;background:#fff;
+  border-top:1px solid var(--rand);padding:9px 14px calc(9px + env(safe-area-inset-bottom));
+  display:flex;gap:8px;align-items:center}
+.leiste select{flex:0 0 118px;min-width:0;border:1px solid var(--rand);border-radius:14px;
+  padding:13px 8px 13px 12px;font:800 14px inherit;color:var(--dunkel);background:#fff;
+  height:50px;text-overflow:ellipsis}
+.leiste input{flex:1;min-width:0;border:1px solid var(--rand);border-radius:14px;
+  padding:13px 14px;font:600 16px inherit;color:var(--dunkel);height:50px}
+.leiste input:focus,.leiste select:focus{outline:2px solid var(--dunkel);outline-offset:-2px}
+.leiste button{flex:0 0 50px;height:50px;border:0;border-radius:50%;background:var(--rot);
+  color:#fff;font-size:27px;font-weight:300;line-height:1;padding:0 0 3px}
 </style></head><body>
 <header><h1>MIETIX <span>FAHRZEUGZUSTAND</span></h1></header>
-<main>
-
-<div class="block">
-  <div class="karte eingabe">
-    <select id="auto"></select>
-    <div class="reihe">
-      <input id="was" type="text" placeholder="z. B. Bremsen fällig"
-        autocomplete="off" enterkeyhint="done">
-      <button id="speichern">Eintragen</button>
-    </div>
+<main><div class="zettel" id="zettel"></div>
+<div class="fuss">
+  <a id="senden">Liste senden</a>
+  <a id="aufraeumen">Erledigte weg</a>
+  <a id="abgleich">Abgleichen</a>
+</div></main>
+<div id="sicherbox">
+  <textarea id="sicherung" placeholder="Hier erscheint die Sicherung, oder hier einfügen zum Einlesen"></textarea>
+  <div class="knoepfe">
+    <button id="ausgeben">Alles sichern</button>
+    <button id="einlesen">Sicherung einlesen</button>
   </div>
 </div>
-
-<div class="block">
-  <p class="feldname">Offene Punkte</p>
-  <div id="liste"></div>
-  <p class="frei" id="frei"></p>
-  <button id="senden" class="hell">Liste als Text senden</button>
+<div class="leiste">
+  <select id="auto"></select>
+  <input id="was" type="text" placeholder="Was ist?" autocomplete="off" enterkeyhint="done">
+  <button id="plus">+</button>
 </div>
-
-<details id="fertigBox">
-  <summary id="fertigKopf">Erledigt</summary>
-  <div id="fertig"></div>
-</details>
-
-<details>
-  <summary>Mit dem Bruder abgleichen</summary>
-  <div class="karte">
-    <button id="ausgeben" class="hell">Alles sichern</button>
-    <button id="einlesen" class="hell">Sicherung einlesen</button>
-    <textarea id="sicherung" placeholder="Hier erscheint die Sicherung, oder hier einfügen zum Einlesen"></textarea>
-  </div>
-</details>
-
-</main>
-<footer>Die Einträge liegen auf diesem Handy.</footer>
 <script>
 const $=id=>document.getElementById(id);
 let AUTOS=["Audi RS Q8"];
 
 function heute(){ const d=new Date();
   return String(d.getDate()).padStart(2,"0")+"."+String(d.getMonth()+1).padStart(2,"0")+"."+d.getFullYear(); }
+function sicher(t){ return t.replace(/[<>&]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;"}[c])); }
 
 function lesen(){
   let a=[];
   try{ a=JSON.parse(localStorage.getItem("mietixZustand")||"[]"); }catch(e){ return []; }
   if(!Array.isArray(a)) return [];
-  // Aeltere Eintraege mit Bauteil und Stand auf den einfachen Satz umstellen
   return a.map(m=>{
-    if(typeof m.text==="string") return m;
+    if(typeof m.text==="string") return m;   // aeltere Fassungen uebernehmen
     const t=[m.teil||"", m.was||""].filter(Boolean).join(" ");
     return { id:m.id, auto:m.auto, text:t, erledigt:(m.stand==="erledigt"), datum:m.datum||heute() };
   }).filter(m=>m&&m.id&&m.auto&&m.text);
 }
 function schreiben(a){ try{ localStorage.setItem("mietixZustand",JSON.stringify(a)); }catch(e){} }
-
-function zeilen(liste,fertig){
-  return '<div class="liste">'+liste.map(m=>
-    '<div class="zeile'+(fertig?" fertig":"")+'" data-id="'+m.id+'">'
-    +'<span class="haken'+(fertig?" an":"")+'"></span>'
-    +'<span class="was">'+m.text.replace(/[<>&]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;"}[c]))+'</span>'
-    +'<span class="weg">&#10005;</span></div>').join("")+'</div>';
+function reihenfolge(){
+  const alle=lesen();
+  return AUTOS.concat([...new Set(alle.map(m=>m.auto))].filter(n=>!AUTOS.includes(n)));
 }
 
 function zeichnen(){
   const alle=lesen();
-  const offen=alle.filter(m=>!m.erledigt);
-  const fertig=alle.filter(m=>m.erledigt);
-
   let h="";
-  AUTOS.forEach(n=>{
-    const l=offen.filter(m=>m.auto===n);
+  reihenfolge().forEach(n=>{
+    const l=alle.filter(m=>m.auto===n);
     if(!l.length) return;
-    h+='<div class="gruppe"><div class="gkopf"><b>'+n+'</b><i>'+l.length+'</i></div>'
-      +zeilen(l,false)+'</div>';
+    l.sort((a,b)=>(a.erledigt?1:0)-(b.erledigt?1:0));
+    h+='<div class="auto">'+sicher(n)+'</div>'
+      +l.map(m=>'<div class="p'+(m.erledigt?" fertig":"")+'" data-id="'+m.id+'">'
+        +'<span>'+sicher(m.text)+'</span></div>').join("");
   });
-  // Fahrzeuge, die nicht in der Preisdatei stehen, trotzdem zeigen
-  const fremd={};
-  offen.filter(m=>!AUTOS.includes(m.auto)).forEach(m=>{(fremd[m.auto]=fremd[m.auto]||[]).push(m);});
-  Object.keys(fremd).forEach(n=>{
-    h+='<div class="gruppe"><div class="gkopf"><b>'+n+'</b><i>'+fremd[n].length+'</i></div>'
-      +zeilen(fremd[n],false)+'</div>';
-  });
-  $("liste").innerHTML = h || '<div class="karte leer">Nichts offen. Alle Fahrzeuge sind in Ordnung.</div>';
-
-  const ohne=AUTOS.filter(n=>!offen.some(m=>m.auto===n));
-  $("frei").innerHTML = (ohne.length && h)
-    ? '<b>Nichts offen:</b> '+ohne.join(", ") : "";
-
-  $("fertigBox").style.display = fertig.length ? "block" : "none";
-  $("fertigKopf").textContent = "Erledigt ("+fertig.length+")";
-  $("fertig").innerHTML = fertig.length ? zeilen(fertig,true) : "";
-
-  document.querySelectorAll(".zeile").forEach(e=>{
-    const id=e.dataset.id;
-    e.querySelector(".haken").onclick=()=>{
-      const a=lesen(), t=a.find(x=>x.id===id);
-      if(t){ t.erledigt=!t.erledigt; schreiben(a); zeichnen(); }
-    };
-    e.querySelector(".weg").onclick=()=>{
-      if(!confirm("Diesen Punkt löschen?")) return;
-      schreiben(lesen().filter(x=>x.id!==id)); zeichnen();
-    };
+  const ohne=AUTOS.filter(n=>!alle.some(m=>m.auto===n&&!m.erledigt));
+  if(h && ohne.length) h+='<div class="ok">In Ordnung: '+ohne.join(", ")+'</div>';
+  $("zettel").innerHTML = h ||
+    '<div class="leer">Noch nichts eingetragen.<br>Unten Fahrzeug wählen und losschreiben.</div>';
+  document.querySelectorAll(".p").forEach(e=>{
+    e.onclick=()=>{ const a=lesen(), t=a.find(x=>x.id===e.dataset.id);
+      if(t){ t.erledigt=!t.erledigt; schreiben(a); zeichnen(); } };
   });
 }
 
@@ -179,17 +127,14 @@ function eintragen(){
   $("was").value="";
   try{ localStorage.setItem("mietixZustandAuto",$("auto").value); }catch(e){}
   zeichnen();
-  $("speichern").textContent="Steht";
-  setTimeout(()=>{$("speichern").textContent="Eintragen";},1100);
 }
-$("speichern").onclick=eintragen;
+$("plus").onclick=eintragen;
 $("was").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); eintragen(); }});
 
 $("senden").onclick=()=>{
   const offen=lesen().filter(m=>!m.erledigt);
   let t="*Mietix Fahrzeuge, Stand "+heute()+"*\n";
-  const namen=AUTOS.concat([...new Set(offen.map(m=>m.auto))].filter(n=>!AUTOS.includes(n)));
-  namen.forEach(n=>{
+  reihenfolge().forEach(n=>{
     const l=offen.filter(m=>m.auto===n);
     if(!l.length) return;
     t+="\n*"+n+"*\n";
@@ -197,13 +142,25 @@ $("senden").onclick=()=>{
   });
   const ohne=AUTOS.filter(n=>!offen.some(m=>m.auto===n));
   if(!offen.length) t+="\nNichts offen. Alle Fahrzeuge sind in Ordnung.";
-  else if(ohne.length) t+="\nNichts offen: "+ohne.join(", ");
+  else if(ohne.length) t+="\nIn Ordnung: "+ohne.join(", ");
   window.open("https://wa.me/?text="+encodeURIComponent(t),"_blank");
 };
 
+$("aufraeumen").onclick=()=>{
+  const weg=lesen().filter(m=>m.erledigt).length;
+  if(!weg){ alert("Es ist nichts abgehakt."); return; }
+  if(!confirm(weg+(weg===1?" abgehakter Punkt":" abgehakte Punkte")+" werden gelöscht.")) return;
+  schreiben(lesen().filter(m=>!m.erledigt)); zeichnen();
+};
+
+$("abgleich").onclick=()=>{
+  const b=$("sicherbox");
+  b.style.display = b.style.display==="block" ? "none" : "block";
+  if(b.style.display==="block") b.scrollIntoView({behavior:"smooth",block:"center"});
+};
 $("ausgeben").onclick=()=>{
   $("sicherung").value=JSON.stringify(lesen());
-  $("ausgeben").textContent="Unten steht die Sicherung";
+  $("ausgeben").textContent="Steht oben";
   setTimeout(()=>{$("ausgeben").textContent="Alles sichern";},1800);
 };
 $("einlesen").onclick=()=>{
@@ -220,7 +177,7 @@ $("einlesen").onclick=()=>{
 function autosFuellen(){
   let merk=""; try{ merk=localStorage.getItem("mietixZustandAuto")||""; }catch(e){}
   const vorher=$("auto").value||merk;
-  $("auto").innerHTML=AUTOS.map(n=>'<option>'+n+'</option>').join("");
+  $("auto").innerHTML=AUTOS.map(n=>'<option>'+sicher(n)+'</option>').join("");
   if(vorher && AUTOS.includes(vorher)) $("auto").value=vorher;
 }
 autosFuellen(); zeichnen();
