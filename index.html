@@ -25,9 +25,8 @@ main{max-width:640px;margin:0 auto;padding:16px 16px 0}
 .p span{font-size:16.5px;line-height:1.42;font-weight:600;word-break:break-word}
 .p.fertig::before{background:#CFCFD4}
 .p.fertig span{text-decoration:line-through;color:#A8A8AE;font-weight:500}
-.ok{font-size:14px;color:var(--grau);line-height:1.5;padding:15px 0 2px;
-  border-top:1px solid #EDEDEF;font-weight:600}
-.zettel .ok:first-child{border-top:0}
+.ok{font-size:13px;color:var(--grau);line-height:1.5;padding:13px 6px 0;
+  font-weight:600;text-align:center}
 .leer{text-align:center;color:var(--grau);font-size:16px;font-weight:600;padding:34px 10px}
 
 .fuss{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;
@@ -55,6 +54,7 @@ main{max-width:640px;margin:0 auto;padding:16px 16px 0}
 </style></head><body>
 <header><h1>MIETIX <span>FAHRZEUGZUSTAND</span></h1></header>
 <main><div class="zettel" id="zettel"></div>
+<p class="ok" id="ok"></p>
 <div class="fuss">
   <a id="senden">Liste senden</a>
   <a id="aufraeumen">Erledigte weg</a>
@@ -108,7 +108,7 @@ function zeichnen(){
         +'<span>'+sicher(m.text)+'</span></div>').join("");
   });
   const ohne=AUTOS.filter(n=>!alle.some(m=>m.auto===n&&!m.erledigt));
-  if(h && ohne.length) h+='<div class="ok">In Ordnung: '+ohne.join(", ")+'</div>';
+  $("ok").textContent = (h && ohne.length) ? "In Ordnung: "+ohne.join(", ") : "";
   $("zettel").innerHTML = h ||
     '<div class="leer">Noch nichts eingetragen.<br>Unten Fahrzeug wählen und losschreiben.</div>';
   document.querySelectorAll(".p").forEach(e=>{
