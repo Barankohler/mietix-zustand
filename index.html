@@ -4,7 +4,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Mietix Fahrzeugzustand</title>
 <style>
-input,select,textarea{font-size:16px;font-family:inherit}
+.fuss a{display:inline-block;padding:12px 8px;cursor:pointer}
+input,select,textarea{font-size:16px;font-family:inherit;max-width:100%;box-sizing:border-box}input[type=date],input[type=time],input[type=datetime-local]{-webkit-appearance:none;appearance:none;min-width:0;max-width:100%;min-height:44px}select{min-width:0}
 
 :root{--rot:#C4161C;--dunkel:#2E2E30;--rand:#E2E2E4;--grau:#6F6F72;--bg:#F2F2F4}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -45,7 +46,7 @@ main{max-width:640px;margin:0 auto;padding:16px 16px 0}
 .leiste{position:fixed;left:0;right:0;bottom:0;background:#fff;
   border-top:1px solid var(--rand);padding:9px 14px calc(9px + env(safe-area-inset-bottom));
   display:flex;gap:8px;align-items:center}
-.leiste select{flex:0 0 118px;min-width:0;border:1px solid var(--rand);border-radius:14px;
+.leiste select{flex:0 0 136px;min-width:0;border:1px solid var(--rand);border-radius:14px;
   padding:13px 8px 13px 12px;font-weight:800;font-size:16px;font-family:inherit;color:var(--dunkel);background:#fff;
   height:50px;text-overflow:ellipsis}
 .leiste input{flex:1;min-width:0;border:1px solid var(--rand);border-radius:14px;
